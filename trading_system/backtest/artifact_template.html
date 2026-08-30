@@ -1,0 +1,513 @@
+<title>TSLA Trailing-Stop Backtest</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    color-scheme: light;
+    --page-bg: #f2f2ee;
+    --surface: #ffffff;
+    --surface-sunken: #ebeae4;
+    --ink: #14181c;
+    --ink-secondary: #52544f;
+    --ink-muted: #85837b;
+    --accent: #9c6b14;
+    --accent-ink: #6e4c0d;
+    --border: #dbd8cf;
+    --border-strong: #c3bfb2;
+    --good: #006300;
+    --bad: #d03b3b;
+    --heat-100: #cde2fb; --heat-150: #b7d3f6; --heat-200: #9ec5f4; --heat-250: #86b6ef;
+    --heat-300: #6da7ec; --heat-350: #5598e7; --heat-400: #3987e5; --heat-450: #2a78d6;
+    --heat-500: #256abf; --heat-550: #1c5cab; --heat-600: #184f95; --heat-650: #104281; --heat-700: #0d366b;
+    --shadow: 0 1px 2px rgba(20,24,28,0.06), 0 4px 16px rgba(20,24,28,0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page-bg: #14171a;
+      --surface: #1b1e22;
+      --surface-sunken: #22262b;
+      --ink: #f2f1ec;
+      --ink-secondary: #b8b6ad;
+      --ink-muted: #83807a;
+      --accent: #d4a445;
+      --accent-ink: #e8c274;
+      --border: #2b2e32;
+      --border-strong: #383c41;
+      --good: #0ca30c;
+      --bad: #f0837a;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 20px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page-bg: #14171a;
+    --surface: #1b1e22;
+    --surface-sunken: #22262b;
+    --ink: #f2f1ec;
+    --ink-secondary: #b8b6ad;
+    --ink-muted: #83807a;
+    --accent: #d4a445;
+    --accent-ink: #e8c274;
+    --border: #2b2e32;
+    --border-strong: #383c41;
+    --good: #0ca30c;
+    --bad: #f0837a;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 20px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--page-bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: "Spectral", Georgia, serif; text-wrap: balance; margin: 0; }
+  .mono, .tabular { font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 96px; }
+
+  .masthead {
+    display: flex; flex-direction: column; gap: 6px;
+    padding-bottom: 28px; border-bottom: 2px solid var(--ink);
+    margin-bottom: 28px;
+  }
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent-ink); font-weight: 600;
+  }
+  h1.title { font-size: clamp(28px, 4vw, 40px); font-weight: 700; color: var(--ink); }
+  .subtitle { color: var(--ink-secondary); font-size: 15px; max-width: 68ch; }
+
+  .disclaimer {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: var(--surface); border: 1.5px solid var(--ink); border-radius: 3px;
+    padding: 16px 18px; margin: 24px 0 36px; box-shadow: var(--shadow);
+  }
+  .disclaimer .mark {
+    font-family: "IBM Plex Mono", monospace; font-weight: 700; font-size: 12px;
+    letter-spacing: 0.08em; border: 1.5px solid var(--ink); border-radius: 2px;
+    padding: 3px 7px; flex-shrink: 0; margin-top: 1px;
+  }
+  .disclaimer p { margin: 0; font-size: 14.5px; color: var(--ink); }
+  .disclaimer strong { color: var(--ink); }
+
+  section { margin: 44px 0; }
+  h2.section-title {
+    font-size: 22px; font-weight: 600; margin-bottom: 6px;
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  h2.section-title .num { color: var(--accent-ink); font-family: "IBM Plex Mono", monospace; font-size: 15px; }
+  .section-note { color: var(--ink-secondary); font-size: 14px; max-width: 74ch; margin-bottom: 18px; }
+
+  .assumptions-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 6px;
+    overflow: hidden; margin-top: 16px;
+  }
+  .assumption-card { background: var(--surface); padding: 16px 18px; }
+  .assumption-card .k { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-muted); margin-bottom: 6px; }
+  .assumption-card .v { font-family: "IBM Plex Mono", monospace; font-size: 18px; font-weight: 500; color: var(--ink); }
+  .assumption-card .note { font-size: 12.5px; color: var(--ink-secondary); margin-top: 4px; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+  .card-header {
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+  }
+  .card-header h3 { font-size: 15px; font-weight: 600; font-family: "IBM Plex Sans", sans-serif; }
+
+  .table-scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead th {
+    position: sticky; top: 0; background: var(--surface-sunken); text-align: right;
+    padding: 9px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--ink-muted); font-weight: 600; border-bottom: 1px solid var(--border-strong);
+    cursor: pointer; white-space: nowrap; user-select: none;
+  }
+  thead th:first-child, thead th.left { text-align: left; }
+  thead th .arrow { font-size: 10px; margin-left: 3px; opacity: 0.5; }
+  thead th.sorted .arrow { opacity: 1; color: var(--accent-ink); }
+  tbody td { padding: 8px 12px; text-align: right; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody td:first-child, tbody td.left { text-align: left; }
+  tbody tr:hover { background: var(--surface-sunken); }
+  tbody tr.rank-1 { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .pos { color: var(--good); }
+  .neg { color: var(--bad); }
+  .rank-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%; font-size: 11px; font-weight: 700;
+    background: var(--surface-sunken); color: var(--ink-secondary);
+  }
+  tr.rank-1 .rank-badge { background: var(--accent); color: #fff; }
+
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 18px; border-bottom: 1px solid var(--border); }
+  .chip {
+    font-family: "IBM Plex Mono", monospace; font-size: 12px; padding: 5px 11px;
+    border: 1px solid var(--border-strong); border-radius: 20px; background: var(--surface);
+    cursor: pointer; color: var(--ink-secondary);
+  }
+  .chip.active { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+
+  .heatmap-wrap { padding: 18px; overflow-x: auto; }
+  .heatmap { border-collapse: separate; border-spacing: 2px; font-size: 12px; }
+  .heatmap th { font-size: 10.5px; padding: 6px 8px; color: var(--ink-muted); font-weight: 600; text-transform: uppercase; }
+  .heatmap td.label { text-align: left; padding: 6px 10px; font-family: "IBM Plex Mono", monospace; font-size: 12px; white-space: nowrap; color: var(--ink); }
+  .heatmap td.cell { width: 64px; height: 34px; text-align: center; border-radius: 3px; font-weight: 600; font-size: 12px; }
+  .legend { display: flex; align-items: center; gap: 8px; padding: 10px 18px; font-size: 12px; color: var(--ink-secondary); }
+  .legend-ramp { display: flex; height: 12px; width: 160px; border-radius: 2px; overflow: hidden; }
+  .legend-ramp span { flex: 1; }
+
+  .two-col { display: grid; grid-template-columns: 1fr; gap: 20px; }
+  @media (min-width: 900px) { .two-col { grid-template-columns: 1.1fr 0.9fr; } }
+
+  .callout {
+    border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0;
+    padding: 14px 18px; font-size: 14px; color: var(--ink-secondary);
+  }
+  .callout strong { color: var(--ink); }
+  ul.plain { margin: 8px 0 0; padding-left: 20px; }
+  ul.plain li { margin-bottom: 6px; font-size: 14px; color: var(--ink-secondary); }
+
+  footer {
+    margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border);
+    font-size: 13px; color: var(--ink-muted);
+  }
+
+  a { color: var(--accent-ink); }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 28px 14px 64px; }
+  }
+</style>
+
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="eyebrow">Backtest Report &middot; TSLA &middot; Trailing-Stop Rules</div>
+    <h1 class="title">Does a trailing stop actually protect you, or just feel like it does?</h1>
+    <p class="subtitle">36 stop/activation/trail combinations, simulated on six years of daily TSLA bars, scored for consistency across market regimes &mdash; not just for whichever one got lucky.</p>
+  </div>
+
+  <div class="disclaimer">
+    <span class="mark">READ FIRST</span>
+    <p><strong>Backtested performance does not guarantee future performance.</strong> Every number below comes from simulating rules against TSLA's specific 2020&ndash;2026 history. A different stock, a different stretch of history, or real-world conditions this model can't capture (execution delays, liquidity shocks, your own behavior under stress) can all produce very different outcomes. Treat this as a way to compare rule sets against each other, not a forecast.</p>
+  </div>
+
+  <section id="methodology">
+    <h2 class="section-title"><span class="num">01</span> Methodology &amp; assumptions</h2>
+    <p class="section-note">Every one of these is a real modeling choice, stated plainly so the numbers can be judged rather than just trusted.</p>
+
+    <div class="two-col">
+      <div class="callout">
+        <strong>How a trade is simulated</strong>
+        <ul class="plain">
+          <li>Daily OHLC bars only (no minute/tick data). A stop is "touched" if the day's <em>low</em> reaches it; if the day's <em>open</em> already gaps through it, the fill uses the open (worse), matching how a real stop-turned-market-order behaves on a gap.</li>
+          <li>No lookahead: today's exit check always uses the stop level as ratcheted through <em>prior</em> days only. Today's high can raise tomorrow's stop, never justify today's own exit against a stop that hasn't been set yet.</li>
+          <li>The live strategy is single-shot (one entry, ever). For this backtest, whenever the position goes flat it re-enters next bar &mdash; otherwise a 6-year run produces exactly one trade, useless for win rate or profit factor. This measures the <em>stop-management rule</em>, not one specific trade's fate.</li>
+          <li>Full reinvestment each trade (100% in, 100% out); whatever's still open at a period's end is closed at that bar's close for reporting.</li>
+        </ul>
+      </div>
+      <div class="callout">
+        <strong>Data</strong>
+        <ul class="plain">
+          <li>TSLA daily bars, split-adjusted (TSLA split 5:1 in 2020 and 3:1 in 2022 &mdash; unadjusted data would show a fake ~90% "crash" at each split date).</li>
+          <li>Source: Alpaca's free IEX feed, which only carries history back to <strong>2020-07-27</strong> &mdash; the real limit on how far back this analysis can reach, not a choice.</li>
+          <li>Sliced into 7 non-overlapping calendar periods (2020 H2 through 2026 YTD) spanning a bull run, a &minus;65% bear year, a sharp recovery, and recent chop &mdash; plus the full run for reference.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="assumptions-grid">
+      <div class="assumption-card">
+        <div class="k">Commission</div>
+        <div class="v">$0.00</div>
+        <div class="note">Fact, not an assumption &mdash; Alpaca charges no commission on US equities.</div>
+      </div>
+      <div class="assumption-card">
+        <div class="k">Bid/ask spread</div>
+        <div class="v">0.01% half-spread</div>
+        <div class="note">TSLA is one of the most liquid US equities; ~1&cent; on a $100&ndash;400 stock is a realistic typical quote.</div>
+      </div>
+      <div class="assumption-card">
+        <div class="k">Entry slippage</div>
+        <div class="v">0.02%</div>
+        <div class="note">Market-order entry under normal conditions.</div>
+      </div>
+      <div class="assumption-card">
+        <div class="k">Stop-exit slippage</div>
+        <div class="v">0.05%</div>
+        <div class="note">Stops become market orders on trigger &mdash; worse fills expected than a routine entry.</div>
+      </div>
+      <div class="assumption-card">
+        <div class="k">Regulatory fees</div>
+        <div class="v">0.003% on sells</div>
+        <div class="note">SEC Section 31 fee + FINRA TAF &mdash; small, mandatory, broker-independent, charged only on exits.</div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:16px;">
+      <strong>What this backtest can't tell you</strong>
+      <ul class="plain">
+        <li><strong>One stock, one historical path.</strong> The 7 periods below are calendar slices of TSLA's own 2020&ndash;2026 history, not independent samples of different market conditions &mdash; a config scoring well across all of them shows it survived how TSLA specifically moved, not that it would survive a fundamentally different regime, or transfer to a different stock. No cross-asset validation was run; that would be the single biggest thing to add next (rerunning this same grid on other volatile large-caps and checking whether the same corner of the parameter space still wins).</li>
+        <li>Each sub-period is backtested independently, which means a fresh position is forced open on that period's first bar and force-closed on its last &mdash; those calendar-boundary entry/exit prices add their own noise on top of the stop rule being tested.</li>
+        <li><strong>Exposure is 100% for every single configuration</strong> shown further down, by construction: this backtest re-enters the instant it goes flat, so capital is deployed essentially the entire time regardless of parameters. That's a property of how this backtest is built to generate enough trades to measure win rate and profit factor at all &mdash; it does <em>not</em> describe how the single-shot live strategy actually behaves, which only ever holds one position, once.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="robustness">
+    <h2 class="section-title"><span class="num">02</span> Robust configurations, not just the highest-return one</h2>
+    <p class="section-note">Ranked by average Calmar-ratio rank (annualized return &divide; |max drawdown|) across the <strong>5 full calendar years</strong> (2021&ndash;2025) &mdash; a configuration only scores well here if it held up reasonably across <em>most of those years</em>, not just the one that happened to be kindest to it. The two partial-year stretches (2020 H2, 2026 YTD) are deliberately excluded from this score: annualizing a 5-month or partial-year return amplifies small timing noise into large swings, and they'd otherwise carry the same weight as a full year despite covering far less trading time. They're still shown in the heatmap and full appendix below for reference.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Top 10 by cross-period robustness</h3>
+      </div>
+      <div class="table-scroll">
+        <table id="robustness-table"><thead></thead><tbody></tbody></table>
+      </div>
+    </div>
+
+    <div class="heatmap-wrap card" style="margin-top:20px;">
+      <div class="card-header" style="border:none; padding-bottom:0;"><h3>Calmar-ratio rank by period &mdash; top 10 configs</h3></div>
+      <div class="section-note" style="padding: 0 18px;">Darker = better rank that period (1st of 36). A config that's dark across the whole row held up everywhere; light patches show where it struggled.</div>
+      <div class="table-scroll">
+        <table class="heatmap" id="heatmap-table"><thead></thead><tbody></tbody></table>
+      </div>
+      <div class="legend">
+        <span>Rank 36 (worst)</span>
+        <div class="legend-ramp">
+          <span style="background:var(--heat-100)"></span><span style="background:var(--heat-200)"></span>
+          <span style="background:var(--heat-300)"></span><span style="background:var(--heat-400)"></span>
+          <span style="background:var(--heat-500)"></span><span style="background:var(--heat-600)"></span><span style="background:var(--heat-700)"></span>
+        </div>
+        <span>Rank 1 (best)</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="contrast">
+    <h2 class="section-title"><span class="num">03</span> For contrast: ranked by total return alone</h2>
+    <p class="section-note">This is the list you'd get by optimizing solely for historical return &mdash; shown so you can see where it agrees or disagrees with the robustness ranking above.</p>
+    <div class="card">
+      <div class="table-scroll">
+        <table id="return-table"><thead></thead><tbody></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <section id="appendix">
+    <h2 class="section-title"><span class="num">04</span> Full results &mdash; all 36 &times; 8 runs</h2>
+    <p class="section-note">Every configuration, every period, every metric. Click a column to sort; filter by period below.</p>
+    <div class="card">
+      <div class="filter-row" id="period-filters"></div>
+      <div class="table-scroll">
+        <table id="full-table"><thead></thead><tbody></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>Backtested performance does not guarantee future performance.</strong> This report simulates rules against one stock's past six years; it is not investment advice and does not predict what TSLA or this strategy will do next. Generated by a pure historical simulation &mdash; no order was sent to any broker to produce these numbers.</p>
+  </footer>
+
+</div>
+
+<script>
+const DATA = __DATA_JSON__;
+const SUB_PERIODS = ["2020 H2","2021","2022","2023","2024","2025","2026 YTD"];
+
+function pct(x, digits) {
+  if (x === null || x === undefined) return "&mdash;";
+  digits = digits === undefined ? 1 : digits;
+  return (x * 100).toFixed(digits) + "%";
+}
+function signedPct(x, digits) {
+  if (x === null || x === undefined) return "&mdash;";
+  const cls = x > 0 ? "pos" : (x < 0 ? "neg" : "");
+  const sign = x > 0 ? "+" : "";
+  return `<span class="${cls}">${sign}${pct(x, digits)}</span>`;
+}
+function num(x, digits) {
+  if (x === null || x === undefined) return "&mdash;";
+  digits = digits === undefined ? 2 : digits;
+  return Number(x).toFixed(digits);
+}
+function calmarDisplay(x) {
+  if (x === null || x === undefined) return "&mdash;";
+  if (x === "inf" || x === Infinity) return "&infin;";
+  return num(x, 2);
+}
+
+function heatColor(rank, maxRank) {
+  const steps = ["--heat-100","--heat-150","--heat-200","--heat-250","--heat-300","--heat-350","--heat-400","--heat-450","--heat-500","--heat-550","--heat-600","--heat-650","--heat-700"];
+  const frac = 1 - (rank - 1) / (maxRank - 1);
+  const idx = Math.round(frac * (steps.length - 1));
+  return `var(${steps[Math.max(0, Math.min(steps.length - 1, idx))]})`;
+}
+function heatTextColor(rank, maxRank) {
+  const frac = 1 - (rank - 1) / (maxRank - 1);
+  return frac > 0.55 ? "#ffffff" : "#14181c";
+}
+
+function buildRobustnessTable() {
+  const rows = DATA.leaderboard.slice(0, 10);
+  const cols = [
+    {k: "config_label", label: "Configuration", left: true},
+    {k: "avg_calmar_rank", label: "Avg Rank", fmt: v => num(v, 1)},
+    {k: "worst_calmar_rank", label: "Worst Rank", fmt: v => num(v, 0)},
+    {k: "negative_periods_count", label: "Losing Periods", fmt: v => v + "/7"},
+    {k: "full_period_total_return", label: "Full Return", fmt: signedPct},
+    {k: "full_period_max_drawdown", label: "Max DD", fmt: v => signedPct(v)},
+    {k: "full_period_calmar", label: "Calmar", fmt: calmarDisplay},
+    {k: "full_period_trades", label: "Trades", fmt: v => v},
+    {k: "full_period_win_rate", label: "Win Rate", fmt: v => pct(v, 0)},
+  ];
+  const table = document.getElementById("robustness-table");
+  table.querySelector("thead").innerHTML = "<tr>" + cols.map(c => `<th class="${c.left?'left':''}">${c.label}</th>`).join("") + "</tr>";
+  table.querySelector("tbody").innerHTML = rows.map((r, i) => {
+    return `<tr class="${i===0?'rank-1':''}"><td class="left"><span class="rank-badge">${i+1}</span> &nbsp;${r.config_label}</td>` +
+      cols.slice(1).map(c => `<td class="tabular">${c.fmt(r[c.k])}</td>`).join("") + "</tr>";
+  }).join("");
+}
+
+function buildHeatmap() {
+  const rows = DATA.leaderboard.slice(0, 10);
+  const byConfigPeriod = {};
+  DATA.all_results.forEach(r => {
+    byConfigPeriod[r.config_label] = byConfigPeriod[r.config_label] || {};
+    byConfigPeriod[r.config_label][r.period_name] = r;
+  });
+  // compute rank within each sub-period across ALL 36 configs
+  const rankByPeriodConfig = {};
+  SUB_PERIODS.forEach(p => {
+    const rowsForPeriod = DATA.all_results.filter(r => r.period_name === p);
+    const sorted = rowsForPeriod.slice().sort((a, b) => {
+      const av = a.calmar_ratio === "inf" ? 1e9 : (a.calmar_ratio === null ? -1e9 : a.calmar_ratio);
+      const bv = b.calmar_ratio === "inf" ? 1e9 : (b.calmar_ratio === null ? -1e9 : b.calmar_ratio);
+      return bv - av;
+    });
+    sorted.forEach((r, i) => {
+      rankByPeriodConfig[r.config_label] = rankByPeriodConfig[r.config_label] || {};
+      rankByPeriodConfig[r.config_label][p] = i + 1;
+    });
+  });
+  const maxRank = DATA.leaderboard.length;
+
+  const table = document.getElementById("heatmap-table");
+  table.querySelector("thead").innerHTML = "<tr><th>Config</th>" + SUB_PERIODS.map(p => `<th>${p}</th>`).join("") + "</tr>";
+  table.querySelector("tbody").innerHTML = rows.map(r => {
+    const cells = SUB_PERIODS.map(p => {
+      const rank = (rankByPeriodConfig[r.config_label] || {})[p];
+      if (rank === undefined) return `<td class="cell">&mdash;</td>`;
+      const bg = heatColor(rank, maxRank);
+      const fg = heatTextColor(rank, maxRank);
+      return `<td class="cell" style="background:${bg}; color:${fg}">${rank}</td>`;
+    }).join("");
+    return `<tr><td class="label">${r.config_label}</td>${cells}</tr>`;
+  }).join("");
+}
+
+function buildReturnTable() {
+  const byLabel = {};
+  DATA.leaderboard.forEach(r => byLabel[r.config_label] = r);
+  const fullPeriod = DATA.all_results.filter(r => r.period_name.startsWith("Full"));
+  const rows = fullPeriod.slice().sort((a, b) => b.total_return - a.total_return).slice(0, 10);
+  const cols = [
+    {k: "config_label", label: "Configuration", left: true},
+    {label: "Total Return", fmt: r => signedPct(r.total_return)},
+    {label: "Max DD", fmt: r => signedPct(r.max_drawdown)},
+    {label: "Trades", fmt: r => r.number_of_trades},
+    {label: "Robustness Avg Rank", fmt: r => { const lb = byLabel[r.config_label]; return lb ? num(lb.avg_calmar_rank, 1) : "&mdash;"; }},
+  ];
+  const table = document.getElementById("return-table");
+  table.querySelector("thead").innerHTML = "<tr>" + cols.map(c => `<th class="${c.left?'left':''}">${c.label}</th>`).join("") + "</tr>";
+  table.querySelector("tbody").innerHTML = rows.map((r, i) => {
+    return `<tr><td class="left"><span class="rank-badge">${i+1}</span> &nbsp;${r.config_label}</td>` +
+      cols.slice(1).map(c => `<td class="tabular">${c.fmt(r)}</td>`).join("") + "</tr>";
+  }).join("");
+}
+
+const FULL_TABLE_COLS = [
+  {k: "config_label", label: "Config", left: true},
+  {k: "period_name", label: "Period", left: true},
+  {k: "total_return", label: "Total Ret", fmt: v => signedPct(v)},
+  {k: "annualized_return", label: "Ann. Ret", fmt: v => signedPct(v)},
+  {k: "max_drawdown", label: "Max DD", fmt: v => signedPct(v)},
+  {k: "number_of_trades", label: "Trades", fmt: v => v},
+  {k: "win_rate", label: "Win Rate", fmt: v => pct(v, 0)},
+  {k: "avg_winning_trade_pct", label: "Avg Win", fmt: v => signedPct(v)},
+  {k: "avg_losing_trade_pct", label: "Avg Loss", fmt: v => signedPct(v)},
+  {k: "profit_factor", label: "Profit Factor", fmt: v => v === null ? "&infin;" : num(v, 2)},
+  {k: "largest_gain_pct", label: "Largest Gain", fmt: v => signedPct(v)},
+  {k: "largest_loss_pct", label: "Largest Loss", fmt: v => signedPct(v)},
+  {k: "exposure", label: "Exposure", fmt: v => pct(v, 0)},
+  {k: "turnover", label: "Turnover", fmt: v => num(v, 1) + "x"},
+  {k: "calmar_ratio", label: "Calmar", fmt: calmarDisplay},
+];
+
+let fullTableSort = {key: "total_return", dir: -1};
+let activePeriodFilter = null;
+
+function renderFullTable() {
+  let rows = DATA.all_results.slice();
+  if (activePeriodFilter) rows = rows.filter(r => r.period_name === activePeriodFilter);
+  const sortKey = fullTableSort.key;
+  rows.sort((a, b) => {
+    let av = a[sortKey], bv = b[sortKey];
+    if (av === "inf") av = 1e9; if (bv === "inf") bv = 1e9;
+    if (av === null || av === undefined) av = -1e9;
+    if (bv === null || bv === undefined) bv = -1e9;
+    if (typeof av === "string") return fullTableSort.dir * av.localeCompare(bv);
+    return fullTableSort.dir * (bv - av) * -1;
+  });
+
+  const table = document.getElementById("full-table");
+  table.querySelector("thead").innerHTML = "<tr>" + FULL_TABLE_COLS.map(c =>
+    `<th class="${c.left?'left':''} ${c.k===sortKey?'sorted':''}" data-key="${c.k}">${c.label}<span class="arrow">${c.k===sortKey ? (fullTableSort.dir===1?'▲':'▼') : '▼'}</span></th>`
+  ).join("") + "</tr>";
+  table.querySelectorAll("thead th").forEach(th => {
+    th.addEventListener("click", () => {
+      const key = th.dataset.key;
+      if (fullTableSort.key === key) fullTableSort.dir *= -1;
+      else fullTableSort = {key, dir: -1};
+      renderFullTable();
+    });
+  });
+
+  table.querySelector("tbody").innerHTML = rows.map(r => {
+    return "<tr>" + FULL_TABLE_COLS.map(c => {
+      const cls = c.left ? "left" : "tabular";
+      const val = c.fmt ? c.fmt(r[c.k]) : r[c.k];
+      return `<td class="${cls}">${val}</td>`;
+    }).join("") + "</tr>";
+  }).join("");
+}
+
+function buildPeriodFilters() {
+  const periods = ["All", ...SUB_PERIODS, "Full (2020 H2 - 2026 YTD)"];
+  const container = document.getElementById("period-filters");
+  container.innerHTML = periods.map(p => `<button class="chip ${p==='All'?'active':''}" data-period="${p}">${p}</button>`).join("");
+  container.querySelectorAll(".chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      container.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      activePeriodFilter = chip.dataset.period === "All" ? null : chip.dataset.period;
+      renderFullTable();
+    });
+  });
+}
+
+buildRobustnessTable();
+buildHeatmap();
+buildReturnTable();
+buildPeriodFilters();
+renderFullTable();
+</script>
