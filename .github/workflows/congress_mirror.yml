@@ -1,0 +1,47 @@
+name: Congress Mirror Monitor
+
+on:
+  schedule:
+    # Same window as the ABEV monitor: covers both EDT and EST market
+    # hours with margin; the strategy itself no-ops outside actual
+    # market hours regardless (congress_monitor.py's own gate).
+    - cron: '*/5 13-21 * * 1-5'
+  workflow_dispatch: {}
+
+concurrency:
+  group: congress-mirror-monitor
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: trading_system/congress_research
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r ../requirements.txt
+
+      - name: Run congress-mirror cycle
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          ALPACA_BASE_URL: ${{ secrets.ALPACA_BASE_URL }}
+        run: python congress_mirror_run_once.py
+
+      - name: Commit updated live database, state, and event log
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/congress_trades_live.db data/mirror_state.json ../logs/events.jsonl
+          git diff --cached --quiet || git commit -m "congress-mirror cycle $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push

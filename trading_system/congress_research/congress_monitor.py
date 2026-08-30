@@ -32,8 +32,10 @@ class CongressMonitorResult:
 def run_congress_mirror_cycle(strategy, risk_mgr) -> CongressMonitorResult:
     timestamp = datetime.now(timezone.utc).isoformat()
     state = mirror_state.load_state()
+    state["last_run_at"] = timestamp
 
     if state["halted"]:
+        mirror_state.save_state(state)
         result = CongressMonitorResult(timestamp, "halted_skip", f"halted: {state['halt_reason']}")
         log_event("monitor", strategy="congress-mirror", timestamp=timestamp,
                    action=result.action, reason=result.reason)
@@ -49,6 +51,7 @@ def run_congress_mirror_cycle(strategy, risk_mgr) -> CongressMonitorResult:
         return result
 
     if not market_open:
+        mirror_state.save_state(state)
         result = CongressMonitorResult(timestamp, "no_action", "market closed; no trading")
         log_event("monitor", strategy="congress-mirror", timestamp=timestamp,
                    action=result.action, reason=result.reason)
