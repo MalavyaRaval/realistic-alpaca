@@ -177,6 +177,34 @@ def test_disclosure_lag_stats_never_touches_performance(tmp_path, monkeypatch):
     assert "return" not in str(stats).lower()
 
 
+def test_get_new_purchase_candidates_with_empty_seen_ids_still_matches_rows(tmp_path, monkeypatch):
+    # Regression test: `id NOT IN (NULL)` is a SQL trap that matches
+    # nothing at all - this must not happen when seen_ids is empty, which
+    # is the normal starting state before anything has been seen yet.
+    monkeypatch.setattr(database, "DB_PATH", tmp_path / "test.db")
+    database.init_db()
+    row, _ = parse_record(make_raw(id="fresh1", chamber="house", transaction_type="Purchase", ticker="NVDA"), "f")
+    database.upsert_transactions([row])
+
+    candidates = database.get_new_purchase_candidates(seen_ids=[], chambers=("house",))
+    assert len(candidates) == 1
+    assert candidates[0].id == "fresh1"
+
+
+def test_get_new_purchase_candidates_excludes_seen_and_wrong_chamber(tmp_path, monkeypatch):
+    monkeypatch.setattr(database, "DB_PATH", tmp_path / "test.db")
+    database.init_db()
+    house_new, _ = parse_record(make_raw(id="h1", chamber="house", transaction_type="Purchase", ticker="AAPL"), "f")
+    house_seen, _ = parse_record(make_raw(id="h2", chamber="house", transaction_type="Purchase", ticker="MSFT"), "f")
+    senate_one, _ = parse_record(make_raw(id="s1", chamber="senate", transaction_type="Purchase", ticker="GOOGL"), "f")
+    sale_one, _ = parse_record(make_raw(id="h3", chamber="house", transaction_type="Sale (Full)", ticker="TSLA"), "f")
+    database.upsert_transactions([house_new, house_seen, senate_one, sale_one])
+
+    candidates = database.get_new_purchase_candidates(seen_ids=["h2"], chambers=("house",))
+    ids = {c.id for c in candidates}
+    assert ids == {"h1"}  # h2 seen, s1 wrong chamber, h3 not a Purchase
+
+
 def test_disclosure_lag_stats_does_not_count_unknown_lateness_as_on_time(tmp_path, monkeypatch):
     monkeypatch.setattr(database, "DB_PATH", tmp_path / "test.db")
     database.init_db()

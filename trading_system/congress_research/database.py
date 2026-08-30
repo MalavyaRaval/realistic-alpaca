@@ -238,6 +238,47 @@ def get_disclosure_lag_stats() -> dict:
     return dict(row)
 
 
+def get_new_purchase_candidates(
+    seen_ids: list,
+    chambers: tuple = ("house",),
+    limit: int = 20,
+) -> list:
+    """Disclosed PURCHASES with a real, tradeable ticker, not already in
+    `seen_ids`, restricted to `chambers` (House-only by default - see the
+    module docstring on the Senate eFD statutory use restriction before
+    ever passing chambers=("house","senate") here), most-recently-
+    disclosed first. This is a candidate list for a strategy to consider,
+    not a recommendation - nothing here implies any of these will be
+    profitable or that the trade wasn't just noise."""
+    if not chambers:
+        return []
+    seen_ids = seen_ids or []
+    chamber_placeholders = ", ".join(f":chamber{i}" for i in range(len(chambers)))
+    params = {f"chamber{i}": c for i, c in enumerate(chambers)}
+    params["limit"] = limit
+
+    # NOT IN (NULL) is a classic SQL trap - it evaluates to UNKNOWN for
+    # every row, silently matching nothing at all - so the exclusion
+    # clause is only added when there's actually something to exclude.
+    exclude_clause = ""
+    if seen_ids:
+        seen_placeholders = ", ".join(f":seen{i}" for i in range(len(seen_ids)))
+        params.update({f"seen{i}": sid for i, sid in enumerate(seen_ids)})
+        exclude_clause = f"AND id NOT IN ({seen_placeholders}) "
+
+    sql = (
+        f"SELECT {', '.join(_COLUMNS)} FROM congress_transactions "
+        f"WHERE transaction_type = 'Purchase' "
+        f"AND ticker IS NOT NULL AND ticker != '' "
+        f"AND chamber IN ({chamber_placeholders}) "
+        f"{exclude_clause}"
+        f"ORDER BY disclosure_date DESC LIMIT :limit"
+    )
+    with connect() as conn:
+        rows = conn.execute(sql, params).fetchall()
+    return [_row_to_transaction(r) for r in rows]
+
+
 def get_summary() -> dict:
     with connect() as conn:
         n = conn.execute("SELECT COUNT(*) FROM congress_transactions").fetchone()[0]

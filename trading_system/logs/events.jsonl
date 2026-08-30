@@ -11,3 +11,26 @@
 {"timestamp": "2026-08-30T19:49:39.600791+00:00", "category": "market_data", "action": "open_orders", "count": 3}
 {"timestamp": "2026-08-30T19:49:39.792044+00:00", "category": "market_data", "action": "current_price", "symbol": "ABEV", "price": 2.86}
 {"timestamp": "2026-08-30T19:49:39.135709+00:00", "category": "monitor", "symbol": "ABEV", "current_price": 2.86, "avg_entry": null, "highest_price_observed": 2.86, "stop_level": null, "position_qty": 0.0, "open_order_ids": [], "action": "no_action", "reason": "market closed; reconciliation only, no trading"}
+{"timestamp": "2026-08-30T20:40:36.029631+00:00", "category": "market_data", "action": "account_summary", "equity": 100.0, "cash": 100.0, "buying_power": 57.81}
+{"timestamp": "2026-08-30T20:40:36.070507+00:00", "category": "market_data", "action": "positions", "count": 0}
+{"timestamp": "2026-08-30T20:40:36.099232+00:00", "category": "market_data", "action": "open_orders", "count": 3}
+{"timestamp": "2026-08-30T20:50:20.261732+00:00", "category": "market_data", "action": "clock", "is_open": false, "next_open": "2026-08-31 09:30:00-04:00", "next_close": "2026-08-31 16:00:00-04:00"}
+{"timestamp": "2026-08-30T20:51:48.007186+00:00", "category": "market_data", "action": "clock", "is_open": false, "next_open": "2026-08-31 09:30:00-04:00", "next_close": "2026-08-31 16:00:00-04:00"}
+{"timestamp": "2026-08-30T20:51:47.436783+00:00", "category": "monitor", "strategy": "congress-mirror", "action": "no_action", "reason": "market closed; no trading"}
+{"timestamp": "2026-08-30T20:52:00.985373+00:00", "category": "market_data", "action": "account_summary", "equity": 100.0, "cash": 100.0, "buying_power": 57.81}
+{"timestamp": "2026-08-30T20:52:57.591835+00:00", "category": "market_data", "action": "account_summary", "equity": 100.0, "cash": 100.0, "buying_power": 57.81}
+{"timestamp": "2026-08-30T20:52:58.213331+00:00", "category": "market_data", "action": "current_price", "symbol": "AMAT", "price": 461.5}
+{"timestamp": "2026-08-30T20:52:58.257484+00:00", "category": "market_data", "action": "current_price", "symbol": "GOOGL", "price": 346.61}
+{"timestamp": "2026-08-30T20:52:58.283184+00:00", "category": "market_data", "action": "current_price", "symbol": "INTC", "price": 89.49}
+{"timestamp": "2026-08-30T20:52:58.331575+00:00", "category": "market_data", "action": "current_price", "symbol": "INTC", "price": 89.49}
+{"timestamp": "2026-08-30T20:52:58.380609+00:00", "category": "market_data", "action": "current_price", "symbol": "BE", "price": 210.65}
+{"timestamp": "2026-08-30T20:52:58.415799+00:00", "category": "market_data", "action": "current_price", "symbol": "BE", "price": 210.65}
+{"timestamp": "2026-08-30T20:52:58.447703+00:00", "category": "market_data", "action": "current_price", "symbol": "PG", "price": 143.715}
+{"timestamp": "2026-08-30T20:52:58.482000+00:00", "category": "market_data", "action": "current_price", "symbol": "GOOGL", "price": 346.61}
+{"timestamp": "2026-08-30T20:52:58.547988+00:00", "category": "market_data", "action": "current_price", "symbol": "IBP", "price": 246.725}
+{"timestamp": "2026-08-30T20:52:58.590921+00:00", "category": "market_data", "action": "current_price", "symbol": "UPST", "price": 29.06}
+{"timestamp": "2026-08-30T20:52:58.628276+00:00", "category": "market_data", "action": "current_price", "symbol": "ESAB", "price": 76.39}
+{"timestamp": "2026-08-30T20:52:58.664522+00:00", "category": "market_data", "action": "current_price", "symbol": "EQT", "price": 54.565}
+{"timestamp": "2026-08-30T20:52:58.704022+00:00", "category": "market_data", "action": "current_price", "symbol": "TOST", "price": 35.145}
+{"timestamp": "2026-08-30T20:52:58.782080+00:00", "category": "market_data", "action": "current_price", "symbol": "AMZN", "price": 266.39}
+{"timestamp": "2026-08-30T20:52:58.833237+00:00", "category": "market_data", "action": "current_price", "symbol": "AVGO", "price": 368.75}
