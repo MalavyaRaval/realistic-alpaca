@@ -1,0 +1,390 @@
+<title>Congressional Trading Performance Study</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Public+Sans:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    color-scheme: light;
+    --page-bg: #eef0f1;
+    --surface: #ffffff;
+    --surface-sunken: #e4e7e8;
+    --ink: #171a1c;
+    --ink-secondary: #4d5457;
+    --ink-muted: #7c8285;
+    --accent: #1d6d6b;
+    --accent-ink: #14514f;
+    --border: #d5d9da;
+    --border-strong: #b9bfc1;
+    --good: #1a7a3d;
+    --bad: #ad3a34;
+    --shadow: 0 1px 2px rgba(23,26,28,0.06), 0 4px 16px rgba(23,26,28,0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page-bg: #14171a; --surface: #1b1f22; --surface-sunken: #22272a;
+      --ink: #f1f2f2; --ink-secondary: #b7bcbe; --ink-muted: #82898c;
+      --accent: #4fb3ab; --accent-ink: #7ecdc6;
+      --border: #2c3235; --border-strong: #3a4144;
+      --good: #52c77c; --bad: #e08079;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 20px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page-bg: #14171a; --surface: #1b1f22; --surface-sunken: #22272a;
+    --ink: #f1f2f2; --ink-secondary: #b7bcbe; --ink-muted: #82898c;
+    --accent: #4fb3ab; --accent-ink: #7ecdc6;
+    --border: #2c3235; --border-strong: #3a4144;
+    --good: #52c77c; --bad: #e08079;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 20px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--page-bg); color: var(--ink);
+    font-family: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: "Source Serif 4", Georgia, serif; text-wrap: balance; margin: 0; }
+  .mono, .tabular { font-family: "Roboto Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 96px; }
+
+  .masthead { display: flex; flex-direction: column; gap: 6px; padding-bottom: 26px; border-bottom: 3px double var(--ink); margin-bottom: 26px; }
+  .eyebrow { font-family: "Roboto Mono", monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-ink); font-weight: 600; }
+  h1.title { font-size: clamp(26px, 3.6vw, 38px); font-weight: 700; }
+  .subtitle { color: var(--ink-secondary); font-size: 15px; max-width: 70ch; }
+
+  .disclaimer { display: flex; gap: 14px; align-items: flex-start; background: var(--surface); border: 1.5px solid var(--ink); border-radius: 3px; padding: 16px 18px; margin: 22px 0; box-shadow: var(--shadow); }
+  .disclaimer .mark { font-family: "Roboto Mono", monospace; font-weight: 700; font-size: 11px; letter-spacing: 0.06em; border: 1.5px solid var(--ink); border-radius: 2px; padding: 3px 7px; flex-shrink: 0; margin-top: 2px; white-space: nowrap; }
+  .disclaimer p { margin: 0 0 8px; font-size: 14.5px; }
+  .disclaimer p:last-child { margin-bottom: 0; }
+
+  section { margin: 42px 0; }
+  h2.section-title { font-size: 21px; font-weight: 600; margin-bottom: 6px; display: flex; align-items: baseline; gap: 10px; }
+  h2.section-title .num { color: var(--accent-ink); font-family: "Roboto Mono", monospace; font-size: 14px; }
+  .section-note { color: var(--ink-secondary); font-size: 14px; max-width: 76ch; margin-bottom: 16px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow); overflow: hidden; }
+  .card-header { padding: 13px 18px; border-bottom: 1px solid var(--border); }
+  .card-header h3 { font-size: 14.5px; font-weight: 600; font-family: "Public Sans", sans-serif; }
+
+  .table-scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead th { position: sticky; top: 0; background: var(--surface-sunken); text-align: right; padding: 9px 12px; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-muted); font-weight: 600; border-bottom: 1px solid var(--border-strong); cursor: pointer; white-space: nowrap; user-select: none; }
+  thead th:first-child, thead th.left { text-align: left; }
+  thead th .arrow { font-size: 9px; margin-left: 3px; opacity: 0.5; }
+  thead th.sorted .arrow { opacity: 1; color: var(--accent-ink); }
+  tbody td { padding: 8px 12px; text-align: right; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody td:first-child, tbody td.left { text-align: left; }
+  tbody tr:hover { background: var(--surface-sunken); }
+  tbody tr.rank-1 { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .pos { color: var(--good); } .neg { color: var(--bad); }
+  .rank-badge { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; font-size: 11px; font-weight: 700; background: var(--surface-sunken); color: var(--ink-secondary); }
+  tr.rank-1 .rank-badge { background: var(--accent); color: #fff; }
+
+  .callout { border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; padding: 14px 18px; font-size: 14px; color: var(--ink-secondary); }
+  .callout strong { color: var(--ink); }
+  ul.plain { margin: 8px 0 0; padding-left: 20px; } ul.plain li { margin-bottom: 7px; font-size: 14px; color: var(--ink-secondary); }
+  .two-col { display: grid; grid-template-columns: 1fr; gap: 20px; }
+  @media (min-width: 900px) { .two-col { grid-template-columns: 1fr 1fr; } }
+
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin: 16px 0; }
+  .stat-card { background: var(--surface); padding: 14px 16px; }
+  .stat-card .k { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-muted); margin-bottom: 5px; }
+  .stat-card .v { font-family: "Roboto Mono", monospace; font-size: 20px; font-weight: 500; }
+  .stat-card .note { font-size: 12px; color: var(--ink-secondary); margin-top: 3px; }
+
+  .divbar-wrap { padding: 16px 18px; }
+  .divbar-row { display: grid; grid-template-columns: 140px 1fr 70px; align-items: center; gap: 10px; font-size: 13px; margin-bottom: 6px; }
+  .divbar-label { text-align: right; color: var(--ink-secondary); font-size: 12.5px; }
+  .divbar-track { position: relative; height: 20px; background: var(--surface-sunken); border-radius: 3px; }
+  .divbar-zero { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--border-strong); }
+  .divbar-fill { position: absolute; top: 2px; bottom: 2px; border-radius: 2px; }
+  .divbar-val { font-family: "Roboto Mono", monospace; font-size: 12.5px; }
+
+  .transition-row { display: flex; align-items: center; gap: 10px; padding: 8px 18px; font-size: 13.5px; border-bottom: 1px solid var(--border); }
+  .transition-row:last-child { border-bottom: none; }
+  .overlap-dots { display: flex; gap: 3px; }
+  .overlap-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--surface-sunken); border: 1px solid var(--border-strong); }
+  .overlap-dot.filled { background: var(--accent); border-color: var(--accent); }
+
+  footer { margin-top: 52px; padding-top: 22px; border-top: 1px solid var(--border); font-size: 13px; color: var(--ink-muted); }
+  a { color: var(--accent-ink); }
+  @media (max-width: 640px) { .wrap { padding: 28px 14px 64px; } }
+</style>
+
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="eyebrow">Research Report &middot; Congressional Trading Disclosures &middot; Performance Attribution</div>
+    <h1 class="title">Do the top-ranked traders in Congress stay on top?</h1>
+    <p class="subtitle">Point-in-time performance statistics for 199 members of Congress, computed walk-forward so no ranking ever uses information that hadn't been disclosed yet.</p>
+  </div>
+
+  <div class="disclaimer">
+    <span class="mark">READ FIRST</span>
+    <p><strong>This report does not claim, and its methodology cannot establish, that any politician used material nonpublic information.</strong> A large disclosed excess return is a description of a historical outcome under STOCK Act disclosure, nothing more &mdash; it is not evidence of improper conduct, and none is asserted here.</p>
+    <p><strong>Nothing here implies any politician's past results will continue.</strong> The consistency analysis in Section 4 exists specifically to test that assumption, and the result argues against it.</p>
+    <p>This dataset is disclosure data, not real-time market data &mdash; every statistic reflects trades that were already old news by the time they became knowable to an outside observer. See Section 2 for exactly how old.</p>
+  </div>
+
+  <section id="methodology">
+    <h2 class="section-title"><span class="num">01</span> Methodology</h2>
+    <div class="two-col">
+      <div class="callout">
+        <strong>Walk-forward, not one lookahead-biased snapshot</strong>
+        <ul class="plain">
+          <li>Five evaluation checkpoints (<span class="mono" id="checkpoints-list"></span>). At each one, a politician's statistics use ONLY transactions with a <em>disclosure date</em> on or before that checkpoint &mdash; not transaction date. A trade that happened before a checkpoint but wasn't yet filed is invisible to that checkpoint's calculation, exactly as it would have been to a real observer.</li>
+          <li>Every price lookup takes the latest available close <em>at or before</em> a reference date, never after &mdash; verified directly with unit tests, not just asserted.</li>
+        </ul>
+      </div>
+      <div class="callout">
+        <strong>Two versions of every return</strong>
+        <ul class="plain">
+          <li><strong>Immediate:</strong> priced at the transaction date &mdash; the unrealistic best case of having the politician's own timing.</li>
+          <li><strong>Lagged:</strong> priced at the disclosure date &mdash; the realistic case for anyone trying to copy the trade after actually learning about it. The gap between these two is the direct answer to "does the edge survive the delay."</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="stat-row" id="scope-stats"></div>
+
+    <div class="stat-row" id="coverage-stats"></div>
+
+    <div class="callout" style="margin-top:16px;">
+      <strong>Data limitations &mdash; read before the rankings below</strong>
+      <ul class="plain">
+        <li><strong>Only about 12% of tickers actually traded have price data at all</strong> (see the coverage figures above) &mdash; price history was fetched for the ~300 most-traded tickers, not the long tail of ~2,300 others. "Rankable" status below is a mechanical proxy for <em>trades large, liquid, well-covered names</em>, not a proxy for skill &mdash; it likely under-represents politicians whose activity concentrates in smaller-cap, OTC, or foreign names, which is exactly where a real informational edge (if any existed) might most plausibly show up instead of in mega-caps everyone already prices efficiently.</li>
+        <li><strong>Disclosed amounts are ranges, and most of them are the widest one.</strong> STOCK Act filings give a range (e.g. "$1,001&ndash;$15,000"), never an exact dollar figure, and every dollar figure in this report is that range's midpoint. About 71% of all disclosed transactions fall in the single lowest bracket ($1,001&ndash;$15,000) &mdash; a bracket whose ceiling is 15&times; its floor, far wider (relative to its own floor) than any other bracket. If real amounts cluster toward the floor, as is commonly suspected, the midpoint systematically overstates the size of most trades, which pulls both the dollar-weighted return and the concentration (HHI) figures toward whatever those small, frequent, lowest-bracket trades happened to do.</li>
+        <li><strong>"Portfolio return" is a dollar-weighted average of point-to-point returns, not a time-weighted or annualized return.</strong> A 3-week trade and a 3-year holding contribute to it in exact proportion to their disclosed dollar size, never their duration &mdash; this is not how a fund's official "return" is normally constructed, and shouldn't be read as one.</li>
+        <li><strong>"Maximum drawdown" is a synthetic index</strong>, built by chaining each politician's disclosed trades sequentially in exit-date order and compounding their dollar-weighted returns &mdash; not a reconstruction of a real portfolio's actual day-to-day value. Positions this politician genuinely held at the same time get chained one-after-another instead of overlapping, and this politician almost certainly held other assets (salary, funds, real estate) never disclosed here and not 100% invested in just these names. Read this number as "how rough would the ride have looked across these specific disclosed trades," not as this person's real wealth swing.</li>
+        <li>Sector classification is a manually curated mapping for well-known tickers, not a licensed classifier; unmapped tickers are excluded from sector breakdowns rather than guessed.</li>
+        <li>Position matching (which specific shares were sold) uses FIFO (oldest lot first) &mdash; a standard, defensible convention, but not something the underlying filings actually specify. In a sustained uptrend, FIFO tends to match a sale against the oldest, cheapest lot, which can inflate the computed gain for politicians who bought the same name repeatedly before selling, versus an average-cost convention.</li>
+        <li>Includes House and Senate members. Senate eFD disclosure data carries a statutory restriction on commercial use beyond news/media dissemination (5 U.S.C. app. &sect;105(c)) &mdash; this report is research/analysis, not a trading signal, but that restriction should be kept in mind for any other use of this data.</li>
+        <li>A politician only appears in the ranked tables below with at least 5 transactions, 5 priced legs, and 40% dollar-weighted price coverage &mdash; thresholds chosen to keep the ranking from being dominated by tiny, noisy samples, listed here so the cutoff is visible, not hidden.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="top-performers">
+    <h2 class="section-title"><span class="num">02</span> Top performers, as of the latest checkpoint</h2>
+    <p class="section-note">Ranked by <strong>lagged</strong> excess return over SPY &mdash; priced at disclosure date, the realistic figure for anyone who could only act once a trade became public. The unrealistic "immediate" version (priced at transaction date, before disclosure) is shown alongside for comparison, not as the ranking key: deliberately, since sorting the headline table by the pre-disclosure figure would foreground the number closest to measuring a timing advantage nobody outside Congress actually had.</p>
+    <div class="card">
+      <div class="table-scroll"><table id="top-table"><thead></thead><tbody></tbody></table></div>
+    </div>
+  </section>
+
+  <section id="edge-survival">
+    <h2 class="section-title"><span class="num">03</span> Does the apparent gap survive disclosure delay?</h2>
+    <p class="section-note">Immediate vs. lagged excess return for the current top 15 (by lagged excess return). Because the ranking above already selects for politicians whose edge holds up under lagged pricing, don't expect dramatic reversals here &mdash; the useful signal is how much each bar still shrinks toward zero even for this pre-selected group, and the aggregate degradation stats below, computed across the full rankable population rather than just this subset.</p>
+    <div class="card">
+      <div class="divbar-wrap" id="edge-chart"></div>
+    </div>
+    <div class="stat-row" id="edge-summary-stats" style="margin-top:16px;"></div>
+  </section>
+
+  <section id="consistency">
+    <h2 class="section-title"><span class="num">04</span> Consistency across time</h2>
+    <p class="section-note">If a "top performer" reflects real, repeatable skill, the same names should tend to stay near the top from one checkpoint to the next. If it's mostly noise from small samples, the top of the ranking should reshuffle almost completely.</p>
+    <div class="card">
+      <div class="card-header"><h3>Top-10 overlap between consecutive checkpoints</h3></div>
+      <div id="transitions"></div>
+    </div>
+    <div class="callout" style="margin-top:16px;" id="rank-correlation-callout"></div>
+  </section>
+
+  <section id="by-sector">
+    <h2 class="section-title"><span class="num">05</span> Performance by sector</h2>
+    <p class="section-note">Dollar-weighted across every rankable politician's disclosed trades in that sector, as of the latest checkpoint. Sector benchmarks are the standard SPDR Select Sector ETFs.</p>
+    <div class="card"><div class="divbar-wrap" id="sector-chart"></div></div>
+  </section>
+
+  <section id="by-year">
+    <h2 class="section-title"><span class="num">06</span> Performance by year</h2>
+    <p class="section-note">Dollar-weighted across every rankable politician's trades that year. Earlier years have fewer, smaller disclosed positions in this dataset - read the bar widths (n) alongside the returns.</p>
+    <div class="card"><div class="divbar-wrap" id="year-chart"></div></div>
+  </section>
+
+  <section id="risks">
+    <h2 class="section-title"><span class="num">07</span> Risks of attempting to copy these transactions</h2>
+    <div class="callout">
+      <ul class="plain">
+        <li><strong>The disclosure lag is the whole game.</strong> Median reporting delay across rankable politicians is shown in Section 1; by the time a trade is public, price has often already moved. Section 3 shows this isn't hypothetical &mdash; several top-immediate performers lose most or all of their apparent edge under the lagged calculation.</li>
+        <li><strong>Small samples produce large, unstable numbers.</strong> A politician with 5-10 priced legs can show a triple-digit excess return from one or two large, favorably-timed trades &mdash; Section 4's near-zero first-to-last rank correlation is direct evidence that most of this ranking does not persist.</li>
+        <li><strong>Concentration risk is real and disclosed here (HHI).</strong> A high-HHI politician's return is dominated by a handful of names; copying them means taking on that same concentration, not a diversified position.</li>
+        <li><strong>This is historical, not investment advice, and not a live feed.</strong> Every number is a backward-looking description of disclosed trades that in most cases already closed out or moved on.</li>
+        <li><strong>Execution reality isn't modeled.</strong> No commissions, spread, slippage, or tax treatment are included anywhere in this analysis - real copying costs would erode any of these numbers further.</li>
+        <li><strong>A large excess return is not evidence of anything improper.</strong> This report does not and cannot establish that any trade involved material nonpublic information; it only describes disclosed, public outcomes under approximate methodology.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="appendix">
+    <h2 class="section-title"><span class="num">08</span> Full ranking &mdash; all rankable politicians</h2>
+    <p class="section-note">Every metric requested, for every politician meeting the inclusion thresholds. Click a column to sort.</p>
+    <div class="card"><div class="table-scroll"><table id="full-table"><thead></thead><tbody></tbody></table></div></div>
+  </section>
+
+  <footer>
+    <p><strong>Backtested/historical performance does not guarantee future performance, and disclosed outperformance does not establish improper conduct.</strong> This report is descriptive research on public STOCK Act disclosures, not investment advice, not a real-time feed, and not an accusation against any individual. No trade has been placed based on these results.</p>
+  </footer>
+</div>
+
+<script>
+const DATA = __DATA_JSON__;
+
+function pct(x, d) { if (x===null||x===undefined) return "&mdash;"; d = d===undefined?1:d; return (x*100).toFixed(d)+"%"; }
+function signedPct(x, d) {
+  if (x===null||x===undefined) return "&mdash;";
+  const cls = x>0?"pos":(x<0?"neg":""); const sign = x>0?"+":"";
+  return `<span class="${cls}">${sign}${pct(x,d)}</span>`;
+}
+function num(x, d) { if (x===null||x===undefined) return "&mdash;"; d=d===undefined?2:d; return Number(x).toFixed(d); }
+
+document.getElementById("checkpoints-list").textContent = DATA.checkpoints.join(", ");
+
+function buildScopeStats() {
+  const el = document.getElementById("scope-stats");
+  const cards = [
+    ["Politicians evaluated", DATA.n_politicians_qualifying, `of ${DATA.n_politicians_total} total disclosed since 2021`],
+    ["Rankable", DATA.n_politicians_rankable, `meet the inclusion thresholds below`],
+    ["Latest checkpoint", DATA.latest_checkpoint, "most recent evaluation date"],
+    ["Min. dollar coverage", pct(DATA.min_dollar_coverage,0), "of disclosed $ volume must be priced to rank"],
+  ];
+  el.innerHTML = cards.map(([k,v,note]) => `<div class="stat-card"><div class="k">${k}</div><div class="v">${v}</div><div class="note">${note}</div></div>`).join("");
+
+  const cov = DATA.universe_coverage, skew = DATA.amount_bracket_skew;
+  const covEl = document.getElementById("coverage-stats");
+  covEl.innerHTML = [
+    ["Tickers with price data", `${cov.distinct_tickers_priced} of ${cov.distinct_tickers_traded}`, `only ${pct(cov.priced_ticker_coverage_pct,0)} of everything actually traded`],
+    ["In the widest disclosure bracket", pct(skew.lowest_bracket_pct,0), `$1,001&ndash;$15,000, out of ${skew.total_transactions.toLocaleString()} transactions`],
+  ].map(([k,v,note]) => `<div class="stat-card"><div class="k">${k}</div><div class="v">${v}</div><div class="note">${note}</div></div>`).join("");
+}
+
+const TOP_COLS = [
+  {k:"politician_name", label:"Politician", left:true},
+  {k:"excess_return_lagged", label:"Excess (Lagged)", fmt:v=>signedPct(v)},
+  {k:"excess_return_immediate", label:"Excess (Immediate)", fmt:v=>signedPct(v)},
+  {k:"n_legs_usable", label:"Priced Legs", fmt:v=>v},
+  {k:"dollar_weighted_coverage_pct", label:"$ Coverage", fmt:v=>pct(v,0)},
+  {k:"median_disclosure_age_days", label:"Median Disclosure Lag", fmt:v=>num(v,0)+"d"},
+];
+
+function buildTopTable() {
+  const rows = DATA.final_ranking.slice(0, 20);
+  const table = document.getElementById("top-table");
+  table.querySelector("thead").innerHTML = "<tr>" + TOP_COLS.map(c=>`<th class="${c.left?'left':''}">${c.label}</th>`).join("") + "</tr>";
+  table.querySelector("tbody").innerHTML = rows.map((r,i) => {
+    return `<tr class="${i===0?'rank-1':''}"><td class="left"><span class="rank-badge">${i+1}</span>&nbsp;${r.politician_name}</td>` +
+      TOP_COLS.slice(1).map(c=>`<td class="tabular">${c.fmt(r[c.k])}</td>`).join("") + "</tr>";
+  }).join("");
+}
+
+function divergingBar(label, value, maxAbs, extra) {
+  const cls = value >= 0 ? "good" : "bad";
+  const widthPct = maxAbs > 0 ? Math.min(100, Math.abs(value) / maxAbs * 50) : 0;
+  const side = value >= 0 ? `left:50%; width:${widthPct}%; background:var(--${cls});` : `right:50%; width:${widthPct}%; background:var(--${cls});`;
+  return `<div class="divbar-row">
+    <div class="divbar-label">${label}</div>
+    <div class="divbar-track"><div class="divbar-zero" style="left:50%"></div><div class="divbar-fill" style="${side}"></div></div>
+    <div class="divbar-val ${cls==='good'?'pos':'neg'}">${value>=0?'+':''}${(value*100).toFixed(1)}%${extra||''}</div>
+  </div>`;
+}
+
+function buildEdgeChart() {
+  const rows = DATA.final_ranking.slice(0, 15);
+  const maxAbs = Math.max(...rows.flatMap(r => [Math.abs(r.excess_return_immediate||0), Math.abs(r.excess_return_lagged||0)]));
+  const el = document.getElementById("edge-chart");
+  el.innerHTML = rows.map(r => {
+    return `<div style="margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:600; margin-bottom:4px;">${r.politician_name}</div>
+      ${divergingBar("immediate", r.excess_return_immediate ?? 0, maxAbs)}
+      ${divergingBar("lagged", r.excess_return_lagged ?? 0, maxAbs)}
+    </div>`;
+  }).join("");
+
+  const degradations = rows.map(r => (r.excess_return_immediate ?? 0) - (r.excess_return_lagged ?? 0)).filter(x => !isNaN(x));
+  const meanDeg = degradations.reduce((a,b)=>a+b,0) / degradations.length;
+  const allDeg = DATA.final_ranking.map(r => (r.excess_return_immediate ?? null) !== null && (r.excess_return_lagged ?? null) !== null ? r.excess_return_immediate - r.excess_return_lagged : null).filter(x => x !== null);
+  const meanDegAll = allDeg.reduce((a,b)=>a+b,0) / allDeg.length;
+  document.getElementById("edge-summary-stats").innerHTML = [
+    ["Mean degradation (top 15)", (meanDeg>=0?"+":"")+(meanDeg*100).toFixed(1)+"%", "immediate minus lagged excess return"],
+    ["Mean degradation (all rankable)", (meanDegAll>=0?"+":"")+(meanDegAll*100).toFixed(1)+"%", `n=${allDeg.length} politicians`],
+  ].map(([k,v,note]) => `<div class="stat-card"><div class="k">${k}</div><div class="v">${v}</div><div class="note">${note}</div></div>`).join("");
+}
+
+function buildConsistency() {
+  const el = document.getElementById("transitions");
+  el.innerHTML = DATA.consistency.transitions.map(t => {
+    const dots = Array.from({length:10}, (_,i) => `<span class="overlap-dot ${i < t.top10_overlap ? 'filled' : ''}"></span>`).join("");
+    return `<div class="transition-row"><span class="mono">${t.from} &rarr; ${t.to}</span><span class="overlap-dots">${dots}</span><span class="mono">${t.top10_overlap}/10 overlap</span></div>`;
+  }).join("");
+
+  const corr = DATA.consistency.first_vs_last_rank_correlation;
+  const interpretation = Math.abs(corr) < 0.15
+    ? `A correlation this close to zero (${corr}) means who ranked well at ${DATA.consistency.first_checkpoint} tells you essentially nothing about who ranks well at ${DATA.consistency.last_checkpoint}. That's notable specifically because the checkpoints are cumulative (each includes everything disclosed since 2021, not an independent slice of time), which would mechanically inflate this correlation if there were nothing else going on - a near-zero result despite that built-in overlap is hard to explain as anything other than noise dominating whatever signal exists.`
+    : `A correlation of ${corr} suggests some persistence in ranking between ${DATA.consistency.first_checkpoint} and ${DATA.consistency.last_checkpoint}. Read this cautiously: the checkpoints are cumulative (each includes everything disclosed since 2021, not an independent window), which mechanically inflates rank correlation to some degree on its own - this number alone is not proof of skill.`;
+  document.getElementById("rank-correlation-callout").innerHTML =
+    `<strong>First-vs-last rank correlation: <span class="mono">${corr}</span></strong> (n=${DATA.consistency.first_vs_last_common_n} politicians rankable at both checkpoints)<p style="margin-top:8px;">${interpretation}</p>`;
+}
+
+function buildBucketChart(elId, bucket, sortByKeyDesc) {
+  const entries = Object.entries(bucket).filter(([k,v]) => v.excess_return !== null);
+  entries.sort((a,b) => sortByKeyDesc ? b[0].localeCompare(a[0]) : (b[1].excess_return - a[1].excess_return));
+  const maxAbs = Math.max(...entries.map(([k,v]) => Math.abs(v.excess_return)));
+  document.getElementById(elId).innerHTML = entries.map(([key, v]) =>
+    divergingBar(`${key} (n=${v.n_legs})`, v.excess_return, maxAbs)
+  ).join("");
+}
+
+const FULL_COLS = [
+  {k:"politician_name", label:"Politician", left:true},
+  {k:"number_of_transactions", label:"Txns", fmt:v=>v},
+  {k:"number_of_unique_securities", label:"Securities", fmt:v=>v},
+  {k:"portfolio_return_immediate", label:"Return (Imm)", fmt:v=>signedPct(v)},
+  {k:"benchmark_return_immediate", label:"Benchmark (Imm)", fmt:v=>signedPct(v)},
+  {k:"excess_return_lagged", label:"Excess (Lagged)", fmt:v=>signedPct(v)},
+  {k:"excess_return_immediate", label:"Excess (Imm)", fmt:v=>signedPct(v)},
+  {k:"max_drawdown_immediate", label:"Max DD", fmt:v=>signedPct(v)},
+  {k:"concentration_hhi", label:"HHI", fmt:v=>num(v,2)},
+  {k:"avg_holding_period_days", label:"Avg Hold (d)", fmt:v=>num(v,0)},
+  {k:"num_holding_period_observations", label:"Hold Obs", fmt:v=>v},
+  {k:"transaction_frequency_per_year", label:"Txns/Yr", fmt:v=>num(v,1)},
+  {k:"median_disclosure_age_days", label:"Median Lag (d)", fmt:v=>num(v,0)},
+  {k:"dollar_weighted_coverage_pct", label:"$ Coverage", fmt:v=>pct(v,0)},
+];
+
+let fullSort = {key:"excess_return_lagged", dir:-1};
+function renderFullTable() {
+  let rows = DATA.final_ranking.slice();
+  rows.sort((a,b) => {
+    let av=a[fullSort.key], bv=b[fullSort.key];
+    if (av===null||av===undefined) av = -1e18;
+    if (bv===null||bv===undefined) bv = -1e18;
+    if (typeof av === "string") return fullSort.dir*av.localeCompare(bv);
+    return fullSort.dir*(bv-av)*-1;
+  });
+  const table = document.getElementById("full-table");
+  table.querySelector("thead").innerHTML = "<tr>"+FULL_COLS.map(c=>`<th class="${c.left?'left':''} ${c.k===fullSort.key?'sorted':''}" data-key="${c.k}">${c.label}<span class="arrow">${c.k===fullSort.key?(fullSort.dir===1?'▲':'▼'):'▼'}</span></th>`).join("")+"</tr>";
+  table.querySelectorAll("thead th").forEach(th => {
+    th.addEventListener("click", () => {
+      const key = th.dataset.key;
+      if (fullSort.key===key) fullSort.dir*=-1; else fullSort={key,dir:-1};
+      renderFullTable();
+    });
+  });
+  table.querySelector("tbody").innerHTML = rows.map(r =>
+    "<tr>"+FULL_COLS.map(c=>`<td class="${c.left?'left':'tabular'}">${c.fmt?c.fmt(r[c.k]):r[c.k]}</td>`).join("")+"</tr>"
+  ).join("");
+}
+
+buildScopeStats();
+buildTopTable();
+buildEdgeChart();
+buildConsistency();
+buildBucketChart("sector-chart", DATA.aggregate_by_sector, false);
+buildBucketChart("year-chart", DATA.aggregate_by_year, true);
+renderFullTable();
+</script>

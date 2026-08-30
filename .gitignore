@@ -20,3 +20,10 @@ venv/
 trading_system/congress_research/data/raw/
 trading_system/congress_research/data/congress_trades.db
 trading_system/congress_research/data/skipped_records.log
+
+# Congress research: performance-analysis outputs (price cache, walk-
+# forward/report JSON, generated artifact HTML) - all regenerated
+# locally by fetch_prices.py -> walk_forward.py -> build_report.py ->
+# build_artifact.py, never tracked.
+trading_system/congress_research/analysis/data/
+trading_system/congress_research/analysis_top_tickers.json
