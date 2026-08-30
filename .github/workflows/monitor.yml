@@ -1,0 +1,47 @@
+name: ABEV Trailing-Stop Monitor
+
+on:
+  schedule:
+    # Every 5 minutes, 13:00-21:55 UTC, Mon-Fri. Wide enough to cover both
+    # EDT (market 13:30-20:00 UTC) and EST (14:30-21:00 UTC) with margin;
+    # the monitor itself no-ops outside actual market hours regardless.
+    - cron: '*/5 13-21 * * 1-5'
+  workflow_dispatch: {}
+
+concurrency:
+  group: abev-monitor
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: trading_system
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run monitoring cycle
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          ALPACA_BASE_URL: ${{ secrets.ALPACA_BASE_URL }}
+        run: python monitor_run_once.py
+
+      - name: Commit updated state and event log
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add logs/events.jsonl logs/monitor_state.json
+          git diff --cached --quiet || git commit -m "monitor cycle $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push

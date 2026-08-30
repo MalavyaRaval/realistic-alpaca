@@ -1,0 +1,8 @@
+{"timestamp": "2026-08-30T18:50:13.881964+00:00", "category": "market_data", "action": "closed_orders", "symbol": "ABEV", "count": 0}
+{"timestamp": "2026-08-30T18:50:13.923995+00:00", "category": "market_data", "action": "open_orders", "count": 3}
+{"timestamp": "2026-08-30T18:50:13.962145+00:00", "category": "market_data", "action": "positions", "count": 0}
+{"timestamp": "2026-08-30T18:50:40.722210+00:00", "category": "market_data", "action": "clock", "is_open": false, "next_open": "2026-08-31 09:30:00-04:00", "next_close": "2026-08-31 16:00:00-04:00"}
+{"timestamp": "2026-08-30T18:50:41.419858+00:00", "category": "market_data", "action": "positions", "count": 0}
+{"timestamp": "2026-08-30T18:50:41.450090+00:00", "category": "market_data", "action": "open_orders", "count": 3}
+{"timestamp": "2026-08-30T18:50:42.161944+00:00", "category": "market_data", "action": "current_price", "symbol": "ABEV", "price": 2.86}
+{"timestamp": "2026-08-30T18:50:40.114942+00:00", "category": "monitor", "symbol": "ABEV", "current_price": 2.86, "avg_entry": null, "highest_price_observed": 2.86, "stop_level": null, "position_qty": 0.0, "open_order_ids": [], "action": "no_action", "reason": "market closed; reconciliation only, no trading"}

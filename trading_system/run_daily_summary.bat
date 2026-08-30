@@ -1,0 +1,2 @@
+@echo off
+"C:\Users\malav\OneDrive_San Francisco State University\Desktop\production\realistic alpaca\trading_system\.venv\Scripts\python.exe" "C:\Users\malav\OneDrive_San Francisco State University\Desktop\production\realistic alpaca\trading_system\daily_summary_run_once.py" >> "C:\Users\malav\OneDrive_San Francisco State University\Desktop\production\realistic alpaca\trading_system\logs\daily_summary_stdout.log" 2>&1
