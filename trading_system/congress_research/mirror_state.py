@@ -1,6 +1,14 @@
-"""Persisted state for the congress-mirror strategy - same pattern as
-monitor_state.py in the main trading_system: designed to be reloaded
-fresh on every invocation, not kept in a long-running process's memory.
+"""Persisted state for the congress-copy strategy - designed to be
+reloaded fresh on every invocation, not kept in a long-running process's
+memory.
+
+`open_position_tickers` replaces the earlier single `current_position_
+ticker` field now that the strategy can hold multiple simultaneous
+copied positions (up to max_positions). Old state files from the prior
+single-position version simply don't have this key, so DEFAULT_STATE
+supplies an empty list for them - no separate migration step needed
+since a single-position deployment never had more than one open ticker
+to carry forward anyway.
 """
 
 import json
@@ -11,7 +19,7 @@ STATE_PATH = Path(__file__).resolve().parent / "data" / "mirror_state.json"
 DEFAULT_STATE = {
     "halted": False,
     "halt_reason": None,
-    "current_position_ticker": None,
+    "open_position_tickers": [],
     "seen_transaction_ids": [],
     "last_run_at": None,
 }
@@ -22,7 +30,10 @@ def load_state() -> dict:
         return dict(DEFAULT_STATE)
     with STATE_PATH.open(encoding="utf-8") as f:
         state = json.load(f)
-    return {**DEFAULT_STATE, **state}
+    merged = {**DEFAULT_STATE, **state}
+    merged["open_position_tickers"] = list(merged.get("open_position_tickers") or [])
+    merged["seen_transaction_ids"] = list(merged.get("seen_transaction_ids") or [])
+    return merged
 
 
 def save_state(state: dict) -> None:
