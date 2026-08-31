@@ -2,7 +2,18 @@
   "halted": false,
   "halt_reason": null,
   "open_position_tickers": [],
-  "seen_transaction_ids": [],
-  "last_run_at": "2026-08-31T00:38:58.375431+00:00",
+  "seen_transaction_ids": [
+    "house_20035243_g0",
+    "house_20035293_g0",
+    "house_20035143_g0",
+    "house_20035143_g2",
+    "house_20035143_g3",
+    "house_20035143_g1",
+    "house_20035289_g0",
+    "house_20035289_g3",
+    "house_20035289_g1",
+    "house_20035273_g2"
+  ],
+  "last_run_at": "2026-08-31T19:18:01.968380+00:00",
   "current_position_ticker": null
 }
