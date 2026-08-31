@@ -40,3 +40,5 @@
 {"timestamp": "2026-08-30T21:11:00.252753+00:00", "category": "monitor", "strategy": "congress-mirror", "action": "no_action", "reason": "market closed; no trading"}
 {"timestamp": "2026-08-30T21:12:27.529817+00:00", "category": "market_data", "action": "clock", "is_open": false, "next_open": "2026-08-31 09:30:00-04:00", "next_close": "2026-08-31 16:00:00-04:00"}
 {"timestamp": "2026-08-30T21:12:27.167085+00:00", "category": "monitor", "strategy": "congress-mirror", "action": "no_action", "reason": "market closed; no trading"}
+{"timestamp": "2026-08-31T00:38:58.526952+00:00", "category": "market_data", "action": "clock", "is_open": false, "next_open": "2026-08-31 09:30:00-04:00", "next_close": "2026-08-31 16:00:00-04:00"}
+{"timestamp": "2026-08-31T00:38:58.375431+00:00", "category": "monitor", "strategy": "congress-mirror", "action": "no_action", "reason": "market closed; no trading"}

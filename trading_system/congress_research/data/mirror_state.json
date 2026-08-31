@@ -1,7 +1,8 @@
 {
   "halted": false,
   "halt_reason": null,
-  "current_position_ticker": null,
+  "open_position_tickers": [],
   "seen_transaction_ids": [],
-  "last_run_at": "2026-08-30T21:12:27.167085+00:00"
+  "last_run_at": "2026-08-31T00:38:58.375431+00:00",
+  "current_position_ticker": null
 }
