@@ -65,3 +65,22 @@
 {"timestamp": "2026-08-31T19:18:02.780204+00:00", "category": "market_data", "action": "current_price", "symbol": "EQT", "price": 54.15}
 {"timestamp": "2026-08-31T19:18:02.780938+00:00", "category": "strategy", "strategy": "congress-copy", "transaction_id": "house_20035273_g2", "ticker": "EQT", "politician": "Thomas H. Kean Jr", "approved": false, "reason": "position size rounds to 0 shares at $54.15/share under current limits (security cap $5.00, strategy cap $20.00, cash/buying-power cap $100.00)", "qty": null, "dollar_amount": null, "dry_run": true}
 {"timestamp": "2026-08-31T19:18:01.926683+00:00", "category": "monitor", "strategy": "congress-mirror", "action": "no_action", "reason": "considered 10 new disclosure(s), none resulted in a trade. no open positions to manage"}
+{"timestamp": "2026-08-31T19:21:50.987790+00:00", "category": "market_data", "action": "clock", "is_open": true, "next_open": "2026-09-01 09:30:00-04:00", "next_close": "2026-08-31 16:00:00-04:00"}
+{"timestamp": "2026-08-31T19:21:51.180393+00:00", "category": "market_data", "action": "positions", "count": 0}
+{"timestamp": "2026-08-31T19:21:51.237007+00:00", "category": "market_data", "action": "open_orders", "count": 0}
+{"timestamp": "2026-08-31T19:21:51.439800+00:00", "category": "market_data", "action": "current_price", "symbol": "ABEV", "price": 2.87}
+{"timestamp": "2026-08-31T19:21:51.496955+00:00", "category": "market_data", "action": "positions", "count": 0}
+{"timestamp": "2026-08-31T19:21:51.555630+00:00", "category": "market_data", "action": "open_orders", "count": 0}
+{"timestamp": "2026-08-31T19:21:51.614670+00:00", "category": "market_data", "action": "closed_orders", "symbol": "ABEV", "count": 0}
+{"timestamp": "2026-08-31T19:21:51.683624+00:00", "category": "market_data", "action": "current_price", "symbol": "ABEV", "price": 2.87}
+{"timestamp": "2026-08-31T19:21:51.746757+00:00", "category": "market_data", "action": "volume", "symbol": "ABEV", "volume": 5129669}
+{"timestamp": "2026-08-31T19:21:51.802286+00:00", "category": "market_data", "action": "clock", "is_open": true, "next_open": "2026-09-01 09:30:00-04:00", "next_close": "2026-08-31 16:00:00-04:00"}
+{"timestamp": "2026-08-31T19:21:51.802453+00:00", "category": "strategy", "strategy": "trailing-stop", "signal": "BUY", "symbol": "ABEV", "side": "buy", "qty": 10}
+{"timestamp": "2026-08-31T19:21:51.858022+00:00", "category": "market_data", "action": "clock", "is_open": true, "next_open": "2026-09-01 09:30:00-04:00", "next_close": "2026-08-31 16:00:00-04:00"}
+{"timestamp": "2026-08-31T19:21:51.923462+00:00", "category": "market_data", "action": "current_price", "symbol": "ABEV", "price": 2.87}
+{"timestamp": "2026-08-31T19:21:51.978220+00:00", "category": "market_data", "action": "account_summary", "equity": 100.0, "cash": 100.0, "buying_power": 100.0}
+{"timestamp": "2026-08-31T19:21:52.032675+00:00", "category": "market_data", "action": "positions", "count": 0}
+{"timestamp": "2026-08-31T19:21:52.032830+00:00", "category": "risk_approval", "symbol": "ABEV", "side": "buy", "qty": 10, "order_notional": 28.700000000000003, "checks": {"account_not_blocked": true, "max_daily_loss": true, "max_order_size": true, "sufficient_buying_power": true, "max_position_size": true, "max_dollar_exposure": true, "max_portfolio_exposure": true, "max_simultaneous_positions": true}}
+{"timestamp": "2026-08-31T19:21:52.315015+00:00", "category": "order", "action": "submitted", "order_id": "f4f8a696-f243-4bb5-89ce-e4eeec080807", "symbol": "ABEV", "side": "buy", "qty": 10, "status": "pending_new"}
+{"timestamp": "2026-08-31T19:21:52.315200+00:00", "category": "strategy", "strategy": "trailing-stop", "action": "entry_submitted", "order_id": "f4f8a696-f243-4bb5-89ce-e4eeec080807", "symbol": "ABEV"}
+{"timestamp": "2026-08-31T19:21:50.786629+00:00", "category": "monitor", "symbol": "ABEV", "current_price": 2.87, "avg_entry": null, "highest_price_observed": 2.87, "stop_level": null, "position_qty": 0.0, "open_order_ids": [], "action": "entry_submitted", "reason": "order f4f8a696-f243-4bb5-89ce-e4eeec080807 submitted, awaiting fill"}
