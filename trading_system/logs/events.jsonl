@@ -84,3 +84,5 @@
 {"timestamp": "2026-08-31T19:21:52.315015+00:00", "category": "order", "action": "submitted", "order_id": "f4f8a696-f243-4bb5-89ce-e4eeec080807", "symbol": "ABEV", "side": "buy", "qty": 10, "status": "pending_new"}
 {"timestamp": "2026-08-31T19:21:52.315200+00:00", "category": "strategy", "strategy": "trailing-stop", "action": "entry_submitted", "order_id": "f4f8a696-f243-4bb5-89ce-e4eeec080807", "symbol": "ABEV"}
 {"timestamp": "2026-08-31T19:21:50.786629+00:00", "category": "monitor", "symbol": "ABEV", "current_price": 2.87, "avg_entry": null, "highest_price_observed": 2.87, "stop_level": null, "position_qty": 0.0, "open_order_ids": [], "action": "entry_submitted", "reason": "order f4f8a696-f243-4bb5-89ce-e4eeec080807 submitted, awaiting fill"}
+{"timestamp": "2026-08-31T23:14:08.299824+00:00", "category": "market_data", "action": "clock", "is_open": false, "next_open": "2026-09-01 09:30:00-04:00", "next_close": "2026-09-01 16:00:00-04:00"}
+{"timestamp": "2026-08-31T23:14:08.265077+00:00", "category": "monitor", "strategy": "congress-mirror", "action": "no_action", "reason": "market closed; no trading"}
