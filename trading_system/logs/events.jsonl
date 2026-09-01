@@ -149,3 +149,11 @@
 {"timestamp": "2026-09-01T19:51:15.412920+00:00", "category": "market_data", "action": "current_price", "symbol": "MNST", "price": 44.94}
 {"timestamp": "2026-09-01T19:51:15.413735+00:00", "category": "strategy", "strategy": "congress-copy", "transaction_id": "house_20035186_g9", "ticker": "MNST", "politician": "Josh Gottheimer", "approved": false, "reason": "position size rounds to 0 shares at $44.94/share under current limits (security cap $5.00, strategy cap $0.00, cash/buying-power cap $71.19)", "qty": null, "dollar_amount": null, "dry_run": true}
 {"timestamp": "2026-09-01T19:51:14.169443+00:00", "category": "monitor", "strategy": "congress-mirror", "action": "no_action", "reason": "considered 10 new disclosure(s), none resulted in a trade. [ABEV] holding: fixed stop a18c4643-b32d-4d75-8ad6-62226037ca2e active; price 2.90, activation at 3.17"}
+{"timestamp": "2026-09-01T19:55:04.564341+00:00", "category": "market_data", "action": "clock", "is_open": true, "next_open": "2026-09-02 09:30:00-04:00", "next_close": "2026-09-01 16:00:00-04:00"}
+{"timestamp": "2026-09-01T19:55:04.602951+00:00", "category": "market_data", "action": "positions", "count": 1}
+{"timestamp": "2026-09-01T19:55:04.612703+00:00", "category": "market_data", "action": "open_orders", "count": 1}
+{"timestamp": "2026-09-01T19:55:04.952093+00:00", "category": "market_data", "action": "current_price", "symbol": "ABEV", "price": 2.895}
+{"timestamp": "2026-09-01T19:55:04.979831+00:00", "category": "market_data", "action": "positions", "count": 1}
+{"timestamp": "2026-09-01T19:55:04.992729+00:00", "category": "market_data", "action": "open_orders", "count": 1}
+{"timestamp": "2026-09-01T19:55:05.011736+00:00", "category": "market_data", "action": "current_price", "symbol": "ABEV", "price": 2.895}
+{"timestamp": "2026-09-01T19:55:04.512529+00:00", "category": "monitor", "symbol": "ABEV", "current_price": 2.895, "avg_entry": 2.88, "highest_price_observed": 2.91, "stop_level": 2.59, "position_qty": 10.0, "open_order_ids": ["a18c4643-b32d-4d75-8ad6-62226037ca2e"], "action": "holding", "reason": "fixed stop a18c4643-b32d-4d75-8ad6-62226037ca2e active; price 2.90, activation at 3.17"}
