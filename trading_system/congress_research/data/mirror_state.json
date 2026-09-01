@@ -1,7 +1,9 @@
 {
   "halted": false,
   "halt_reason": null,
-  "open_position_tickers": [],
+  "open_position_tickers": [
+    "ABEV"
+  ],
   "seen_transaction_ids": [
     "house_20035243_g0",
     "house_20035293_g0",
@@ -12,8 +14,18 @@
     "house_20035289_g0",
     "house_20035289_g3",
     "house_20035289_g1",
-    "house_20035273_g2"
+    "house_20035273_g2",
+    "house_20035273_g3",
+    "house_20035273_g1",
+    "house_20035273_g5",
+    "house_20035260_g1",
+    "house_20035260_g2",
+    "house_9116308_g2",
+    "house_20035275_g0",
+    "house_20035191_g9",
+    "house_20035191_g11",
+    "house_20035235_g0"
   ],
-  "last_run_at": "2026-08-31T23:14:08.265077+00:00",
+  "last_run_at": "2026-09-01T17:03:14.767857+00:00",
   "current_position_ticker": null
 }
