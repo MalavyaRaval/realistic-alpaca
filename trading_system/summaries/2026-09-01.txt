@@ -1,0 +1,16 @@
+[2026-09-01T22:32:55.037501+00:00] market_data: {'action': 'closed_orders', 'symbol': 'ABEV', 'count': 1}
+[2026-09-01T22:32:55.106093+00:00] market_data: {'action': 'open_orders', 'count': 1}
+[2026-09-01T22:32:55.173181+00:00] market_data: {'action': 'positions', 'count': 1}
+=== Daily Summary: ABEV on 2026-09-01 ===
+Trades submitted: 1
+  sell 10.0 ABEV (stop) - status=new
+Fills: 0
+Realized P/L: 0.00
+Unrealized P/L: 0.10
+Current positions: 1
+  ABEV: qty=10.0, avg_entry=2.88, unrealized_pl=0.1
+Current stop levels: 1
+  stop stop_price=2.59 trail_percent=None hwm=None
+Errors: 1
+  [2026-09-01T17:03:14.887903+00:00] congress_mirror_strategy.run_cycle: recovered an untracked live position, likely from a prior crash between order submission and state persistence; added back to tracking
+Risk events: 0
