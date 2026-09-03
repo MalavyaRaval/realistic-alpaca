@@ -252,3 +252,11 @@
 {"timestamp": "2026-09-03T16:44:49.879949+00:00", "category": "strategy", "strategy": "congress-copy", "transaction_id": "house_9116267_g102", "ticker": "V", "politician": "Rohit Khanna", "approved": false, "reason": "asset_type None is not a confirmed plain-equity type - skipped rather than assumed safe", "qty": null, "dollar_amount": null, "dry_run": true}
 {"timestamp": "2026-09-03T16:44:49.894739+00:00", "category": "strategy", "strategy": "congress-copy", "transaction_id": "house_9116267_g108", "ticker": "HD", "politician": "Rohit Khanna", "approved": false, "reason": "asset_type None is not a confirmed plain-equity type - skipped rather than assumed safe", "qty": null, "dollar_amount": null, "dry_run": true}
 {"timestamp": "2026-09-03T16:44:48.721642+00:00", "category": "monitor", "strategy": "congress-mirror", "action": "no_action", "reason": "considered 10 new disclosure(s), none resulted in a trade. [ABEV] holding: fixed stop a18c4643-b32d-4d75-8ad6-62226037ca2e active; price 3.02, activation at 3.17"}
+{"timestamp": "2026-09-03T16:52:51.606420+00:00", "category": "market_data", "action": "clock", "is_open": true, "next_open": "2026-09-04 09:30:00-04:00", "next_close": "2026-09-03 16:00:00-04:00"}
+{"timestamp": "2026-09-03T16:52:51.649645+00:00", "category": "market_data", "action": "positions", "count": 1}
+{"timestamp": "2026-09-03T16:52:51.657665+00:00", "category": "market_data", "action": "open_orders", "count": 1}
+{"timestamp": "2026-09-03T16:52:51.711616+00:00", "category": "market_data", "action": "current_price", "symbol": "ABEV", "price": 3.025}
+{"timestamp": "2026-09-03T16:52:51.804723+00:00", "category": "market_data", "action": "positions", "count": 1}
+{"timestamp": "2026-09-03T16:52:51.812116+00:00", "category": "market_data", "action": "open_orders", "count": 1}
+{"timestamp": "2026-09-03T16:52:51.826063+00:00", "category": "market_data", "action": "current_price", "symbol": "ABEV", "price": 3.025}
+{"timestamp": "2026-09-03T16:52:51.565326+00:00", "category": "monitor", "symbol": "ABEV", "current_price": 3.025, "avg_entry": 2.88, "highest_price_observed": 3.025, "stop_level": 2.59, "position_qty": 10.0, "open_order_ids": ["a18c4643-b32d-4d75-8ad6-62226037ca2e"], "action": "holding", "reason": "fixed stop a18c4643-b32d-4d75-8ad6-62226037ca2e active; price 3.02, activation at 3.17"}

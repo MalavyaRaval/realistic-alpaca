@@ -2,8 +2,8 @@
   "ABEV": {
     "halted": false,
     "halt_reason": null,
-    "highest_price_observed": 3.005,
+    "highest_price_observed": 3.025,
     "last_stop_level": 2.59,
-    "last_run_at": "2026-09-02T21:58:12.357665+00:00"
+    "last_run_at": "2026-09-03T16:52:51.565326+00:00"
   }
 }
