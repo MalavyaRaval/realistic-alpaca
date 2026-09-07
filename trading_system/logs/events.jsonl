@@ -391,3 +391,8 @@
 {"timestamp": "2026-09-07T21:27:32.580973+00:00", "category": "monitor", "symbol": "ABEV", "current_price": 3.025, "avg_entry": 2.88, "highest_price_observed": 3.06, "stop_level": 2.59, "position_qty": 10.0, "open_order_ids": ["a18c4643-b32d-4d75-8ad6-62226037ca2e"], "action": "no_action", "reason": "market closed; reconciliation only, no trading"}
 {"timestamp": "2026-09-07T23:30:27.096472+00:00", "category": "market_data", "action": "clock", "is_open": false, "next_open": "2026-09-08 09:30:00-04:00", "next_close": "2026-09-08 16:00:00-04:00"}
 {"timestamp": "2026-09-07T23:30:27.002055+00:00", "category": "monitor", "strategy": "congress-mirror", "action": "no_action", "reason": "market closed; no trading"}
+{"timestamp": "2026-09-07T23:39:35.458812+00:00", "category": "market_data", "action": "clock", "is_open": false, "next_open": "2026-09-08 09:30:00-04:00", "next_close": "2026-09-08 16:00:00-04:00"}
+{"timestamp": "2026-09-07T23:39:35.503617+00:00", "category": "market_data", "action": "positions", "count": 1}
+{"timestamp": "2026-09-07T23:39:35.513591+00:00", "category": "market_data", "action": "open_orders", "count": 1}
+{"timestamp": "2026-09-07T23:39:35.560333+00:00", "category": "market_data", "action": "current_price", "symbol": "ABEV", "price": 3.025}
+{"timestamp": "2026-09-07T23:39:35.418224+00:00", "category": "monitor", "symbol": "ABEV", "current_price": 3.025, "avg_entry": 2.88, "highest_price_observed": 3.06, "stop_level": 2.59, "position_qty": 10.0, "open_order_ids": ["a18c4643-b32d-4d75-8ad6-62226037ca2e"], "action": "no_action", "reason": "market closed; reconciliation only, no trading"}
