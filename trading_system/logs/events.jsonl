@@ -513,3 +513,5 @@
 {"timestamp": "2026-09-09T19:39:24.870746+00:00", "category": "market_data", "action": "open_orders", "count": 1}
 {"timestamp": "2026-09-09T19:39:24.884567+00:00", "category": "market_data", "action": "current_price", "symbol": "ABEV", "price": 3.02}
 {"timestamp": "2026-09-09T19:39:24.431442+00:00", "category": "monitor", "symbol": "ABEV", "current_price": 3.02, "avg_entry": 2.88, "highest_price_observed": 3.06, "stop_level": 2.59, "position_qty": 10.0, "open_order_ids": ["a18c4643-b32d-4d75-8ad6-62226037ca2e"], "action": "holding", "reason": "fixed stop a18c4643-b32d-4d75-8ad6-62226037ca2e active; price 3.02, activation at 3.17"}
+{"timestamp": "2026-09-09T21:55:05.213286+00:00", "category": "market_data", "action": "clock", "is_open": false, "next_open": "2026-09-10 09:30:00-04:00", "next_close": "2026-09-10 16:00:00-04:00"}
+{"timestamp": "2026-09-09T21:55:05.083827+00:00", "category": "monitor", "strategy": "congress-mirror", "action": "no_action", "reason": "market closed; no trading"}
