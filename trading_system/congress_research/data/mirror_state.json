@@ -1,6 +1,6 @@
 {
-  "halted": false,
-  "halt_reason": null,
+  "halted": true,
+  "halt_reason": "market clock unavailable: Could not retrieve market clock: {\"message\":\"Internal Server Error\"}\n",
   "open_position_tickers": [
     "ABEV"
   ],
@@ -156,6 +156,6 @@
     "house_9116328_g224",
     "house_9116328_g79"
   ],
-  "last_run_at": "2026-09-10T23:23:26.044452+00:00",
+  "last_run_at": "2026-09-11T16:49:10.667454+00:00",
   "current_position_ticker": null
 }
