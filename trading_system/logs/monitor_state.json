@@ -1,7 +1,7 @@
 {
   "ABEV": {
-    "halted": false,
-    "halt_reason": null,
+    "halted": true,
+    "halt_reason": "MarketDataUnavailable: Could not retrieve market clock: {\"message\":\"Internal Server Error\"}\n",
     "highest_price_observed": 3.06,
     "last_stop_level": 2.59,
     "last_run_at": "2026-09-10T23:24:32.108350+00:00"
