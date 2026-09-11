@@ -1,0 +1,22 @@
+[2026-09-11T22:28:30.162956+00:00] market_data: {'action': 'closed_orders', 'symbol': 'ABEV', 'count': 1}
+[2026-09-11T22:28:30.176277+00:00] market_data: {'action': 'open_orders', 'count': 1}
+[2026-09-11T22:28:30.198978+00:00] market_data: {'action': 'positions', 'count': 1}
+=== Daily Summary: ABEV on 2026-09-11 ===
+Trades submitted: 0
+Fills: 0
+Realized P/L: 0.00
+Unrealized P/L: 1.30
+Current positions: 1
+  ABEV: qty=10.0, avg_entry=2.88, unrealized_pl=1.3
+Current stop levels: 1
+  stop stop_price=2.59 trail_percent=None hwm=None
+Errors: 4
+  [2026-09-11T16:49:13.900369+00:00] market_data.is_market_open: {"message":"Internal Server Error"}
+
+  [2026-09-11T16:49:13.900848+00:00] congress_monitor.run_congress_mirror_cycle: Could not retrieve market clock: {"message":"Internal Server Error"}
+
+  [2026-09-11T16:52:01.208106+00:00] market_data.is_market_open: {"message":"Internal Server Error"}
+
+  [2026-09-11T16:52:01.208450+00:00] monitor.run_monitoring_cycle: MarketDataUnavailable: Could not retrieve market clock: {"message":"Internal Server Error"}
+
+Risk events: 0
