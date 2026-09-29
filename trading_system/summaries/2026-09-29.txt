@@ -1,13 +1,13 @@
-[2026-09-29T00:20:01.317869+00:00] market_data: {'action': 'closed_orders', 'symbol': 'ABEV', 'count': 1}
-[2026-09-29T00:20:01.328511+00:00] market_data: {'action': 'open_orders', 'count': 1}
-[2026-09-29T00:20:01.352671+00:00] market_data: {'action': 'positions', 'count': 1}
+[2026-09-29T23:38:26.042727+00:00] market_data: {'action': 'closed_orders', 'symbol': 'ABEV', 'count': 1}
+[2026-09-29T23:38:26.054065+00:00] market_data: {'action': 'open_orders', 'count': 1}
+[2026-09-29T23:38:26.076048+00:00] market_data: {'action': 'positions', 'count': 1}
 === Daily Summary: ABEV on 2026-09-29 ===
 Trades submitted: 0
 Fills: 0
 Realized P/L: 0.00
-Unrealized P/L: -0.10
+Unrealized P/L: 0.00
 Current positions: 1
-  ABEV: qty=10.0, avg_entry=2.88, unrealized_pl=-0.1
+  ABEV: qty=10.0, avg_entry=2.88, unrealized_pl=0.0
 Current stop levels: 1
   stop stop_price=2.59 trail_percent=None hwm=None
 Errors: 0
